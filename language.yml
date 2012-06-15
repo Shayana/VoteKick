@@ -1,0 +1,33 @@
+###In this file you can set any message displayed by the plugin report to http://dev.bukkit.org/server-mods/vote-kick/ for more infos.
+
+VoteStart:
+    Ban: "A vote has started to ban %player. Please type /voteban or /votestay %player"
+    Kick: "A vote has started to kick %player. Please type /votekick or /votestay %player"
+    TempBan: "A vote has started to tempban %player for %time minutes. Please type /votetempban %player or /votestay %player"
+    
+Infos:
+    RemainingVotes: "Remaining votes before %player is punished :"
+    Kicked: "%player has been kicked from the server."
+    Banned: "%player has been banned from the server."
+    TempBanned: "%player has been banned from the server for %time minutes."
+    VoteCancelled: "The vote against %player has been cancelled."
+    TimeOut: "The vote againts %player has timed out."
+    
+Notify:
+    Voted: "%voter has voted against %player"
+    Supported: "%voter has supported %player"
+    Cancelled: "%voter has cancelled the vote agains %player"
+    Forced: "%voter has forced the vote agains %player"
+    
+Errors:
+    NotPermission: "You don't have permission to perform this command."
+    TargetProtected: "%player is protected against votes"
+    VoteNotFound: "There is no vote against %player"
+    AllreadyVoted: "You have allready voted against %player."
+    PlayerNotFound: "%player was not found on this server."
+    TooManyVotes: "You have reached the vote limit for today !"
+    
+KickScreen:
+    Banned: "Players have voted to ban you from this server."
+    TempBanned: "Players have voted to ban you from this server for %duration%"
+    Kicked: "Players have voted to kick you from this server, please respect the rules"
