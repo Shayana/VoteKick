@@ -1,0 +1,25 @@
+name: VoteKick
+prefix: VK
+authors: [Shayana]
+main: fr.r0x.VoteKick.Main.Main
+commands:
+    votekick:
+        description: Vote to kick a player
+        usage: /votekick <player> (reason)
+    voteban:
+        descrpiton: Vote to ban a player
+        usage: /voteban <player> (reason)
+    votetempban:
+        description: Vote to tempban a player
+        usage: /votetempban <player> <time> (reason)
+    votestay:
+        description: Vote to keep a player on the server
+        usage: /votestay <player>
+    voteforce:
+        description: Force a vote to succeed
+        usage: /voteforce <player>
+    votecancel:
+        description: Cancel a vote
+        usage: /votecancel <player>
+
+
