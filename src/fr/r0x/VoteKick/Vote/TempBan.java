@@ -15,7 +15,8 @@ public class TempBan extends Vote{
 	public TempBan(Main plugin, Player voter, Player voted, String vote)
 	{
 		super(plugin, voter, voted, vote);
-		
+		setMap(plugin.tempbans);
+		setList(plugin.votes);
 	}
 	
 	public void setTime(int t)
@@ -41,13 +42,13 @@ public class TempBan extends Vote{
 
 	public void tempban()
 	{
-		setMap(plugin.tempbans);
-		setList(plugin.votes);
+		
 		vote();
 		if(map.get(voted) >= plugin.config.votesNeeded(this))
 		{
-			// TODO voted.kickPlayer(plugin.msg.tempbanscr(this));
-		//TODO	Bukkit.broadcastMessage(plugin.msg.tempbanbrd(this));
+			 voted.kickPlayer(plugin.msg.tempbanscr(this));
+			 plugin.tempbansstorage.Tempban(this);
+		Bukkit.broadcastMessage(plugin.msg.tempbanbrd(this));
 			accomplish();
 		}
 

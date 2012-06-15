@@ -1,0 +1,21 @@
+Percentage: true
+
+VotesNeeded:
+  ban: 50
+  kick: 50
+  tempban: 50
+  
+MaxVotes:
+    ban:
+    kick:
+    tempban:
+
+Delay:
+  Ban: 60
+  Kick: 60
+  Tempban: 60
+
+MaxTimeTempBan: 120
+
+UseTimer: true
+VoteDelay: 240

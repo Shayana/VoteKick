@@ -12,6 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import fr.r0x.VoteKick.Storage.Bans;
 import fr.r0x.VoteKick.Storage.Kicks;
 import fr.r0x.VoteKick.Storage.LogFile;
+import fr.r0x.VoteKick.Storage.TempBans;
 import fr.r0x.VoteKick.Utils.Configuration;
 import fr.r0x.VoteKick.Utils.Messages;
 import fr.r0x.VoteKick.Utils.VKLogger;
@@ -25,12 +26,13 @@ public class Main extends JavaPlugin
 	public Commands cmd;
 	public Bans bansstorage;
 	public Kicks kicksstorage;
+	public TempBans tempbansstorage;
 	
 	public HashMap<Player, Integer> kicks;
 	public HashMap<Player, Integer> bans;
 	public HashMap<Player, Integer> tempbans;
 	public HashMap<Player, Player> votes;
-	
+	public HashMap<Player, String> reasons;
 	
 @Override
 	public void onEnable()
@@ -44,10 +46,11 @@ public class Main extends JavaPlugin
 		this.bans = new HashMap<Player, Integer>();
 		this.tempbans = new HashMap<Player, Integer>();
 		this.votes = new HashMap<Player, Player>();
-		
+		this.reasons = new HashMap<Player, String>();
 		this.register = new LogFile(this);
 		this.kicksstorage = new Kicks(this);
 		this.bansstorage = new Bans(this);
+		this.tempbansstorage = new TempBans(this);
 		
 		log.enabled();
 	}

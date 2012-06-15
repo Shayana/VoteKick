@@ -12,15 +12,15 @@ public class Kick extends Vote{
 	public Kick(Main plugin, Player voter, Player voted, String vote)
 	{
 		super(plugin, voter, voted, vote);
-		
+		setMap(plugin.kicks);
+		setList(plugin.votes);
 	}
 	
 		
 
 	public void kick()
 	{
-		setMap(plugin.kicks);
-		setList(plugin.votes);
+		
 		vote();
 		if(map.get(voted) >= plugin.config.votesNeeded(this))
 		{

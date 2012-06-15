@@ -12,15 +12,15 @@ public class Ban extends Vote{
 	public Ban(Main plugin, Player voter, Player voted, String vote)
 	{
 		super(plugin, voter, voted, vote);
-		
+		setMap(plugin.bans);
+		setList(plugin.votes);
 	}
 	
 		
 
-	public void kick()
+	public void ban()
 	{
-		setMap(plugin.bans);
-		setList(plugin.votes);
+		
 		vote();
 		if(map.get(voted) >= plugin.config.votesNeeded(this))
 		{

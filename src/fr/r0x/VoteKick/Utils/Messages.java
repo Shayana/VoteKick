@@ -9,6 +9,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import fr.r0x.VoteKick.Main.Main;
+import fr.r0x.VoteKick.Vote.TempBan;
+import fr.r0x.VoteKick.Vote.Vote;
 
 public class Messages {
 
@@ -73,20 +75,17 @@ public class Messages {
 	}
 	
 	public String VoteCanceled(Player p){
-		return name() + ChatColor.GRAY + getLang().getString("Message.Infos.VoteCancelled")
+		return name() + ChatColor.GRAY + getLang().getString("Infos.VoteCancelled")
 				.replaceAll("%player%", p.getDisplayName());
 	}
 	
-	public String remainingVotes(Player p){
+	public String remainingVotes(Vote v){
 		return name() + ChatColor.GRAY + getLang().getString("Infos.RemainingVotes")
-				.replaceAll("%player%", p.getDisplayName());
+				.replaceAll("%player%", v.getVoted().getDisplayName());
 
 	}
 	
-	public String kickedbrd(Player p){
-		return name() + ChatColor.GRAY + getLang().getString("Infos.Kicked")
-				.replaceAll("%player%", p.getDisplayName());
-	}
+
 	
 	public String isBanned(Player p){
 		return name() + ChatColor.GRAY + getLang().getString("Infos.Banned")
@@ -174,6 +173,23 @@ public class Messages {
 		return name() + ChatColor.GRAY + getLang().getString("Infos.Banned")
 				.replaceAll("%player%", p.getDisplayName());
 	}
+
+	public String tempbanscr(TempBan tempBan) {
+		return name() + ChatColor.GRAY + getLang().getString("KickScreen.TempBan")
+				.replaceAll("%player", tempBan.getVoted().getDisplayName()).replaceAll("%time", String.valueOf(tempBan.getTime()));
+	}
+	
+	public String kickedbrd(Player p){
+		return name() + ChatColor.GRAY + getLang().getString("Infos.Kicked")
+				.replaceAll("%player%", p.getDisplayName());
+	}
+	
+	public String tempbanbrd(TempBan tempBan) {
+		return name() + ChatColor.GRAY + getLang().getString("Infos.TempBanned")
+				.replaceAll("%player", tempBan.getVoted().getDisplayName())
+				.replaceAll("%time", String.valueOf((tempBan.getTime())));
+	}
+	
 	
 	
 

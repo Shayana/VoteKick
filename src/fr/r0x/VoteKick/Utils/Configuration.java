@@ -50,5 +50,14 @@ public class Configuration {
 	{
 		return config.getInt("MaxTimeTempBan");
 	}
+	
+	public boolean doTimer()
+	{
+		return config.getBoolean("UseTimer");
+	}
+	public int Timer()
+	{
+		return config.getInt("VoteDelay");
+	}
 
 }
