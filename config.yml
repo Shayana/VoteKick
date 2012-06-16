@@ -5,17 +5,18 @@ VotesNeeded:
   kick: 50
   tempban: 50
   
+VoteLimits: true
 MaxVotes:
-    ban:
-    kick:
-    tempban:
-
+    ban: 15
+    kick: 15
+    tempban: 15
+    
+UseTimer: true
 Delay:
   Ban: 60
   Kick: 60
   Tempban: 60
 
+UseMaxtime: true
 MaxTimeTempBan: 120
 
-UseTimer: true
-VoteDelay: 240

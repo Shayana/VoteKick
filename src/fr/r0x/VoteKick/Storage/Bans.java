@@ -1,6 +1,7 @@
 package fr.r0x.VoteKick.Storage;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.bukkit.configuration.file.FileConfiguration;
@@ -40,6 +41,13 @@ public class Bans {
 	    		bans.setDefaults(defConfig);
 	    	}
 	    }
+	    try {
+			bans.save(bansFile);
+		} catch (IOException e) {
+			System.out.println("Error during bans saving, disabling VoteKick");
+			e.printStackTrace();
+			plugin.getPluginLoader().disablePlugin(plugin);
+		}
 	   
 	}
 	
@@ -58,9 +66,19 @@ public class Bans {
 	{
 		String path = vote.getVoted().getName();
 		getBans().createSection(path);
-		getBans().addDefault(path + ".Date", plugin.register.date());
-		getBans().addDefault(path + ".Reason", vote.getReason());
-		getBans().addDefault(path + ".Voters", vote.getList());
+		getBans().set(path + ".Date", plugin.register.date());
+		getBans().set(path + ".Reason", vote.getReason());
+		getBans().set(path + ".Voters", vote.getList());
+		try 
+		{
+			bans.save(bansFile);
+		}
+		catch(IOException e)
+		{
+			System.out.println("Error during bans saving, disabling VoteKick");
+			e.printStackTrace();
+			plugin.getPluginLoader().disablePlugin(plugin);
+		}
 	}
 	
 	

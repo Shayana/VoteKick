@@ -1,6 +1,7 @@
 package fr.r0x.VoteKick.Utils;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.bukkit.ChatColor;
@@ -42,8 +43,18 @@ public class Messages {
 	    	{
 	    		YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defbansFile);
 	    		language.setDefaults(defConfig);
-	    	}
+	    		language.options().copyDefaults(true) ;   
+
+
+	    		}
 	    }
+	    try {
+			language.save(languageFile);
+		} catch (IOException e) {
+			System.out.println("Error while saving language file, disabling plugin");
+			e.printStackTrace();
+			plugin.getPluginLoader().disablePlugin(plugin);
+		}
 	   
 	}
 	
@@ -61,7 +72,7 @@ public class Messages {
 	
 	public String VoteStartBan(Player p){
 		return name() + ChatColor.GRAY + getLang().getString("VoteStart.Ban")
-				.replaceAll("%player%", p.getDisplayName());
+				.replaceAll("%player", p.getDisplayName());
 	}
 	
 	public String VoteStartKick(Player p){
@@ -71,17 +82,18 @@ public class Messages {
 	
 	public String VoteStartTempBan(Player p, Integer i){
 		return name() + getLang().getString("VoteStart.TempBan")
-				.replaceAll("%player%", p.getDisplayName()).replaceAll("%time%", String.valueOf(i));
+				.replaceAll("%player", p.getDisplayName())
+				.replaceAll("%time", String.valueOf(i));
 	}
 	
 	public String VoteCanceled(Player p){
 		return name() + ChatColor.GRAY + getLang().getString("Infos.VoteCancelled")
-				.replaceAll("%player%", p.getDisplayName());
+				.replaceAll("%player", p.getDisplayName());
 	}
 	
 	public String remainingVotes(Vote v){
 		return name() + ChatColor.GRAY + getLang().getString("Infos.RemainingVotes")
-				.replaceAll("%player%", v.getVoted().getDisplayName());
+				.replaceAll("%player", v.getVoted().getDisplayName());
 
 	}
 	
@@ -89,11 +101,11 @@ public class Messages {
 	
 	public String isBanned(Player p){
 		return name() + ChatColor.GRAY + getLang().getString("Infos.Banned")
-				.replaceAll("%player%", p.getDisplayName());
+				.replaceAll("%player", p.getDisplayName());
 	}
 	
 	public String Timeout(Player p){
-		return name() + ChatColor.GRAY + getLang().getString("Infos.Timeout")
+		return name() + ChatColor.GRAY + getLang().getString("Infos.TimeOut")
 				.replaceAll("%player", p.getDisplayName());
 	}
 	
@@ -107,27 +119,31 @@ public class Messages {
 	
 	public String allreadyVoted(Player p){
 		return name() + ChatColor.GRAY + getLang().getString("Errors.AllreadyVoted")
-				.replaceAll("%player%", p.getDisplayName());
+				.replaceAll("%player", p.getDisplayName());
 	}
 	
 	public String noPlayer(String p) {
 		return name() + ChatColor.GRAY + getLang().getString("Errors.PlayerNotFound")
-				.replaceAll("%player%", p);
+				.replaceAll("%player", p);
 	}
 	
 	public String noVote(Player p){
 		return name() + ChatColor.GRAY + getLang().getString("Errors.VoteNotFound")
-				.replaceAll("%player%", p.getDisplayName());
+				.replaceAll("%player", p.getDisplayName());
 	}
 	
 
 	public String Protected(Player p){
 		return name() + ChatColor.GRAY + getLang().getString("Errors.TargetProtected")
-				.replaceAll("%player%", p.getDisplayName());
+				.replaceAll("%player", p.getDisplayName());
 	}
 	
 	public String maxVotes(){
 		return name() + ChatColor.GRAY + getLang().getString("Errors.TooManyVotes");
+	}
+	
+	public String forYourself(){
+		return name() + ChatColor.GRAY + getLang().getString("Errors.VoteforYourself");
 	}
 	
 	
@@ -140,22 +156,26 @@ public class Messages {
 	
 	public String hasVoted(Player v, Player k){
 		return name() + ChatColor.GRAY + getLang().getString("Notify.Voted")
-				.replaceAll("%voter%", v.getDisplayName()).replaceAll("%player%", k.getDisplayName());
+				.replaceAll("%voter", v.getDisplayName())
+				.replaceAll("%player", k.getDisplayName());
 	}
 	
 	public String hasSupported(Player v, Player k){
 		return name() + ChatColor.GRAY + getLang().getString("Notify.Supported")
-				.replaceAll("%player%", k.getDisplayName()).replaceAll("%voter%", v.getDisplayName());
+				.replaceAll("%player", k.getDisplayName())
+				.replaceAll("%voter", v.getDisplayName());
 	}
 	
 	public String hasCancelled(Player v, Player k){
 		return name() + ChatColor.GRAY + getLang().getString("Notify.Cancelled")
-				.replaceAll("%voter%", v.getDisplayName()).replaceAll("%player%", k.getDisplayName());
+				.replaceAll("%voter", v.getDisplayName())
+				.replaceAll("%player", k.getDisplayName());
 	}
 	
 	public String hasForced(Player v, Player k){
 		return name() + ChatColor.GRAY + getLang().getString("Notify.Forced")
-				.replaceAll("%voter%", v.getDisplayName()).replaceAll("%player%", k.getDisplayName());
+				.replaceAll("%voter", v.getDisplayName())
+				.replaceAll("%player", k.getDisplayName());
 	}
 	
 	
@@ -169,19 +189,21 @@ public class Messages {
 		return getLang().getString("KickScreen.Kicked");
 	}
 	
+	public String tempbanscr(TempBan tempBan) {
+		return name() + ChatColor.GRAY + getLang().getString("KickScreen.TempBaned")
+				.replaceAll("%player", tempBan.getVoted().getDisplayName())
+				.replaceAll("%time", String.valueOf(tempBan.getTime()));
+	}
+	
 	public String bannedbrd(Player p){
 		return name() + ChatColor.GRAY + getLang().getString("Infos.Banned")
-				.replaceAll("%player%", p.getDisplayName());
+				.replaceAll("%player", p.getDisplayName());
 	}
 
-	public String tempbanscr(TempBan tempBan) {
-		return name() + ChatColor.GRAY + getLang().getString("KickScreen.TempBan")
-				.replaceAll("%player", tempBan.getVoted().getDisplayName()).replaceAll("%time", String.valueOf(tempBan.getTime()));
-	}
 	
 	public String kickedbrd(Player p){
 		return name() + ChatColor.GRAY + getLang().getString("Infos.Kicked")
-				.replaceAll("%player%", p.getDisplayName());
+				.replaceAll("%player", p.getDisplayName());
 	}
 	
 	public String tempbanbrd(TempBan tempBan) {

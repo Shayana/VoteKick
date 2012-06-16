@@ -30,12 +30,12 @@ public boolean onCommand(CommandSender sender, Command command, String label, St
 		sender.sendMessage(plugin.getDescription().getPrefix() + " Connect to the game to perform this command !");
 	}	
 	
-	if (!(args.length == 1))
+	if (args.length < 1)
 	{
 		sender.sendMessage(plugin.getCommand(label).getUsage());
 	return true;
 	}
-	if (!Bukkit.getPlayer(args[0]).isOnline())
+	if (Bukkit.getPlayer(args[0]) == null)
 	{
 		sender.sendMessage(plugin.msg.noPlayer(args[0]));
 	return true;
@@ -73,11 +73,11 @@ public boolean onCommand(CommandSender sender, Command command, String label, St
 		if (args.length > 1)
 		{
 			StringBuilder build = new StringBuilder();
-			for (int i =0; i < args.length; i++)
+			for (int i = 0; i < args.length; i++)
 			{
-				if(i >= 2)
+				if(i >= 1)
 				{
-					build.append(args[i-1]);
+					build.append(args[i]);
 					build.append(" ");
 				}
 			}
@@ -89,49 +89,38 @@ public boolean onCommand(CommandSender sender, Command command, String label, St
 	
 	if(label.equalsIgnoreCase("votetempban"))
 	{
-		int time;
-		if (!plugin.tempbans.containsKey(voted))
+		if (args.length < 2)
 		{
-			if (args.length < 2)
+			voter.sendMessage(plugin.getCommand(label).getUsage());
+		return true;
+		}
+		int time = 0;
+		try
+		{
+			time = Integer.parseInt(args[1]);
+		}
+		catch(NumberFormatException e)
+		{
+			voter.sendMessage(plugin.getCommand(label).getUsage());
+		return true;
+		}
+		TempBan temp = new TempBan(plugin, voter, voted, "TempBan");
+		if(args.length > 2)
+		{
+			StringBuilder build = new StringBuilder();
+			for (int i = 0; i < args.length; i++)
 			{
-				sender.sendMessage(plugin.getCommand(label).getUsage());
-			return true;
-			}
-			TempBan temp = new TempBan(plugin, voter, voted, "TempBan");
-
-			try
-			{
-				time = Integer.parseInt(args[2]);
-				temp.setTime(time);
-			}
-			catch(NumberFormatException e)
-			{
-				sender.sendMessage(plugin.getCommand(label).getUsage());
-				return true;
-			}
-			
-			if (args.length > 2)
-			{
-				StringBuilder build = new StringBuilder();
-				for (int i =0; i < args.length; i++)
+				if (i >= 3)
 				{
-					if(i >= 3)
-					{
-						build.append(args[i-1]);
-						build.append(" ");
-					}
+				build.append(args[i -1]);
+				build.append(" ");
 				}
-				temp.setReason(build.toString());
 			}
-			temp.tempban();
-			return true;
+			temp.setReason(build.toString());
 		}
-		else
-		{
-			TempBan temp = new TempBan(plugin, voter, voted, "TempBan");
-			temp.tempban();
-			return true;
-		}
+		temp.setTime(time);
+		temp.tempban();
+		return true;
 	}
 	
 	if(label.equalsIgnoreCase("votestay"))

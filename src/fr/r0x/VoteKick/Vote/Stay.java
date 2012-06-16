@@ -1,5 +1,7 @@
 package fr.r0x.VoteKick.Vote;
 
+import java.util.ArrayList;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -35,7 +37,9 @@ public class Stay extends Vote{
 		{
 			int votes = map.get(voted);
 			map.put(voted, votes - 1);
-			voters.put(voter, voted);
+			ArrayList<Player> list = voters.get(voted);
+			list.add(voter);
+			voters.put(voted, list);
 			Bukkit.broadcastMessage(plugin.msg.remainingVotes(this));
 			for (Player p : Bukkit.getOnlinePlayers())
 			{

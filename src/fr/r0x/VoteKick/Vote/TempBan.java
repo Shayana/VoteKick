@@ -22,7 +22,7 @@ public class TempBan extends Vote{
 	public void setTime(int t)
 	{
 		int time;
-		if(t > plugin.config.maxTime())
+		if( plugin.config.useMaxTime() && t > plugin.config.maxTime())
 		{
 			time = plugin.config.maxTime();
 		}
@@ -42,17 +42,20 @@ public class TempBan extends Vote{
 
 	public void tempban()
 	{
-		
-		vote();
-		if(map.get(voted) >= plugin.config.votesNeeded(this))
+		if (!canVote())
 		{
-			 voted.kickPlayer(plugin.msg.tempbanscr(this));
-			 plugin.tempbansstorage.Tempban(this);
-		Bukkit.broadcastMessage(plugin.msg.tempbanbrd(this));
+		return;
+		}
+		vote();
+		if(remaining == 0)
+		{
+			voted.kickPlayer(plugin.msg.tempbanscr(this));
+			plugin.tempbansstorage.Tempban(this);
+			Bukkit.broadcastMessage(plugin.msg.tempbanbrd(this));
 			accomplish();
 		}
-
 	}
+	
 	
 }
 

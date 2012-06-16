@@ -20,9 +20,11 @@ public class Kick extends Vote{
 
 	public void kick()
 	{
-		
+		if (!canVote()){
+			return;
+		}
 		vote();
-		if(map.get(voted) >= plugin.config.votesNeeded(this))
+		if(can && remaining == 0)
 		{
 			voted.kickPlayer(plugin.msg.kickedscr());
 			Bukkit.broadcastMessage(plugin.msg.kickedbrd(voted));

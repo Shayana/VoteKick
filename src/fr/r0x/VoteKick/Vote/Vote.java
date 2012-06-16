@@ -3,7 +3,6 @@ package fr.r0x.VoteKick.Vote;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
@@ -20,9 +19,12 @@ public class Vote {
 	protected String type;
 	protected String reason;
 	protected int time;
+	protected int remaining;
 	
 	public HashMap<Player, Integer> map;
-	public HashMap<Player, Player> voters;
+	public HashMap<Player, ArrayList<Player>> voters;
+	
+	protected boolean can = true;
 	
 	public Vote(Main plugin, Player voter, Player voted, String vote)
 	{
@@ -30,6 +32,7 @@ public class Vote {
 		this.voted = voted;
 		this.voter = voter;
 		this.type = vote;
+		this.voters = plugin.votes;
 	}
 	
 	public void setReason(String reason)
@@ -43,7 +46,7 @@ public class Vote {
 		this.map = map;
 	}
 	
-	public void setList(HashMap<Player, Player> list)
+	public void setList(HashMap<Player, ArrayList<Player>> list)
 	{
 		this.voters = list;
 	}
@@ -80,15 +83,19 @@ public class Vote {
 	}
 	
 	
-	public List<String> getList()
+	public ArrayList<String> getList()
 	{
-		List<String> list = new ArrayList<String>();
+		ArrayList<String> list = new ArrayList<String>();
 		
-		for (Entry<Player, Player> entry : voters.entrySet())
+		for (Entry<Player, ArrayList<Player>> entry : voters.entrySet())
 		{
-			if (entry.getValue().equals(voted) && entry.getKey().equals(voter))
+			if (entry.getKey().equals(voted))
 			{
-				list.add(entry.getKey().getName());
+				for (Player p : entry.getValue())
+				{
+					list.add(p.getName());
+				}
+				
 			}
 		}
 		return list;
@@ -98,28 +105,39 @@ public class Vote {
 	
 	public boolean canVote()
 	{
-		if (!voter.hasPermission("votekick."+getVote().toLowerCase()) && !voter.hasPermission("votekick.admin"))
+		if (voter == voted)
+		{
+			voter.sendMessage(plugin.msg.forYourself());
+			can = false;
+			return false;
+		}
+		if (!voter.hasPermission("votekick."+ getVote().toLowerCase()) && !voter.hasPermission("votekick.admin"))
 		{
 			voter.sendMessage(plugin.msg.noPerm());
+			can = false;
 		return false;
 		}
 		if(voted.hasPermission("votekick.protected"))
 		{
 			voter.sendMessage(plugin.msg.Protected(voted));
+			can = false;
 		return false;
 		}
-		if (plugin.config.maxVotes(this) >= plugin.register.getCount(voter, this))
+		if (plugin.config.votelimit() && plugin.register.getCount(voter, this) >= plugin.config.maxVotes(this))
 		{
 		voter.sendMessage(plugin.msg.maxVotes());
+		can = false;
 		return false;
 		}
-		if (voters.containsKey(voter) && voters.get(voter).equals(voted))
+		if (voters.containsKey(voted) && voters.get(voted).contains(voter))
 		{
 			voter.sendMessage(plugin.msg.allreadyVoted(voted));
+			can = false;
 		return false;
 		}
 		else
 		{
+			can = true;
 		return true;
 		}
 	}
@@ -128,14 +146,22 @@ public class Vote {
 	
 	public void vote()
 	{
-		if (!canVote())
-		{
-		return;
-		}
+		
 				
 //Let's report this vote !
-		
-		voters.put(voter, voted);
+		if(voters.containsKey(voted))
+		{
+			ArrayList<Player> list = voters.get(voted);
+			list.add(voter);
+		voters.remove(voted);
+		voters.put(voted, list);
+		}
+		if (!voters.containsKey(voted))
+		{
+			ArrayList<Player> list = new ArrayList<Player>();
+			list.add(voter);
+			voters.put(voted, list);
+		}
 		plugin.register.addCount(voter, this);
 		
 		for(Player p : Bukkit.getOnlinePlayers())
@@ -150,8 +176,7 @@ public class Vote {
 		if(map.containsKey(voted))
 		{
 			int i = map.get(voted);
-			map.put(voted, i++);
-			Bukkit.broadcastMessage(plugin.msg.remainingVotes(this) +" "+String.valueOf(plugin.config.votesNeeded(this) - map.get(voted)) );
+			map.put(voted, i + 1);
 		}
 		
 //Or no vote yet ?
@@ -176,6 +201,11 @@ public class Vote {
 				timer();
 			}
 		}
+		remaining = plugin.config.votesNeeded(this) - map.get(voted);
+		if(remaining > 0)
+		{
+		Bukkit.broadcastMessage(String.valueOf(remaining));
+		}
 	
 	}
 	
@@ -183,23 +213,26 @@ public class Vote {
 	{
 		map.remove(voted);
 		plugin.reasons.remove(voted);
-		for (Entry<Player, Player> entry : voters.entrySet())
-		{
-			if (entry.getKey().equals(voter) && entry.getValue().equals(voted)){
-				voters.remove(entry);
-			}
-		}
+		voters.remove(voted);
+		
 	}
+	
 	
 	public void timer()
 	{
-		int timer = plugin.config.Timer();
+		int timer = plugin.config.Timer(this);
 		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()
 		{
 			   public void run()
 			   {
+				   if (!map.containsKey(voted))
+				   {
+				return;
+				   }
 				   Bukkit.broadcastMessage(plugin.msg.Timeout(voted));
 			       accomplish();   
+				  
+				   
 			   }
 		}, (long)timer);
 	}

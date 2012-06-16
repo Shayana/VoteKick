@@ -2,6 +2,7 @@ name: VoteKick
 prefix: VK
 authors: [Shayana]
 main: fr.r0x.VoteKick.Main.Main
+version: 2.0
 commands:
     votekick:
         description: Vote to kick a player

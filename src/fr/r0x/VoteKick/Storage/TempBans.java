@@ -1,6 +1,7 @@
 package fr.r0x.VoteKick.Storage;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
 
@@ -41,6 +42,13 @@ public class TempBans {
 	    		tempbans.setDefaults(defConfig);
 	    	}
 	    }
+	    try {
+			tempbans.save(tempbansFile);
+		} catch (IOException e) {
+			System.out.println("Error during TempBans saving, disabling VoteKick");
+			e.printStackTrace();
+			plugin.getPluginLoader().disablePlugin(plugin);
+		}
 	   
 	}
 	
@@ -66,10 +74,17 @@ public class TempBans {
 		String path = vote.getVoted().getName();
 		long timer = (CurrentTime() + (vote.getTime() * 60000));
 		gettempbans().createSection(path);
-		gettempbans().addDefault(path + ".Date", plugin.register.date());
-		gettempbans().addDefault(path + ".Until", timer);
-		gettempbans().addDefault(path + ".Reason", vote.getReason());
-		gettempbans().addDefault(path + ".Voters", vote.getList());
+		gettempbans().set(path + ".Date", plugin.register.date());
+		gettempbans().set(path + ".Until", timer);
+		gettempbans().set(path + ".Reason", vote.getReason());
+		gettempbans().set(path + ".Voters", vote.getList());
+		try {
+			tempbans.save(tempbansFile);
+		} catch (IOException e) {
+			System.out.println("Error during TempBans saving, disabling VoteKick");
+			e.printStackTrace();
+			plugin.getPluginLoader().disablePlugin(plugin);
+		}
 	}
 	
 	

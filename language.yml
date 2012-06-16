@@ -1,5 +1,3 @@
-###In this file you can set any message displayed by the plugin report to http://dev.bukkit.org/server-mods/vote-kick/ for more infos.
-
 VoteStart:
     Ban: "A vote has started to ban %player. Please type /voteban or /votestay %player"
     Kick: "A vote has started to kick %player. Please type /votekick or /votestay %player"
@@ -26,6 +24,7 @@ Errors:
     AllreadyVoted: "You have allready voted against %player."
     PlayerNotFound: "%player was not found on this server."
     TooManyVotes: "You have reached the vote limit for today !"
+    VoteforYourself: "You can't vote for yourself !"
     
 KickScreen:
     Banned: "Players have voted to ban you from this server."

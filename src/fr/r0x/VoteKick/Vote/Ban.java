@@ -20,16 +20,17 @@ public class Ban extends Vote{
 
 	public void ban()
 	{
-		
-		vote();
-		if(map.get(voted) >= plugin.config.votesNeeded(this))
+		if (canVote())
 		{
-			voted.kickPlayer(plugin.msg.bannedscr());
-			Bukkit.broadcastMessage(plugin.msg.bannedscr());
-			plugin.bansstorage.Ban(this);
-			accomplish();
+		vote();
+			if(remaining == 0)
+			{
+				voted.kickPlayer(plugin.msg.bannedscr());
+				Bukkit.broadcastMessage(plugin.msg.bannedscr());
+				plugin.bansstorage.Ban(this);
+				accomplish();
+			}
 		}
-
 	}
 	
 }

@@ -1,6 +1,7 @@
 package fr.r0x.VoteKick.Storage;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
 
@@ -42,6 +43,13 @@ private File logFile = null;
     			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(deflogfile);
     			log.setDefaults(defConfig);
     		}
+		}
+		try {
+			log.save(logFile);
+		} catch (IOException e) {
+			System.out.println("Error during Loggin saving, disabling VoteKick");
+			e.printStackTrace();
+			plugin.getPluginLoader().disablePlugin(plugin);
 		}
     
     
@@ -95,11 +103,18 @@ private File logFile = null;
 		
 		if(getLog().get(path) != null)
 		{
-			getLog().addDefault(path, getCount(p, vote) +1 );
+			getLog().set(path, getCount(p, vote) +1 );
 		}
 		else
 		{
-			getLog().addDefault(path, 1);	
+			getLog().set(path, 1);
+		}
+		try {
+			log.save(logFile);
+		} catch (IOException e) {
+			System.out.println("Error during Loggin saving, disabling VoteKick");
+			e.printStackTrace();
+			plugin.getPluginLoader().disablePlugin(plugin);
 		}
 	
 	}

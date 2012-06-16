@@ -1,5 +1,6 @@
 package fr.r0x.VoteKick.Main;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.command.Command;
@@ -27,16 +28,19 @@ public class Main extends JavaPlugin
 	public Bans bansstorage;
 	public Kicks kicksstorage;
 	public TempBans tempbansstorage;
+	public LoginListener listen;
 	
 	public HashMap<Player, Integer> kicks;
 	public HashMap<Player, Integer> bans;
 	public HashMap<Player, Integer> tempbans;
-	public HashMap<Player, Player> votes;
+	public HashMap<Player, ArrayList<Player>> votes;
 	public HashMap<Player, String> reasons;
 	
 @Override
 	public void onEnable()
 	{
+		this.getConfig().options().copyDefaults(true);
+		this.saveConfig();
 		this.config = new Configuration(this);
 		this.log = new VKLogger(this);
 		this.msg = new Messages(this);
@@ -45,12 +49,18 @@ public class Main extends JavaPlugin
 		this.kicks = new HashMap<Player, Integer>();
 		this.bans = new HashMap<Player, Integer>();
 		this.tempbans = new HashMap<Player, Integer>();
-		this.votes = new HashMap<Player, Player>();
+		this.votes = new HashMap<Player, ArrayList<Player>>();
 		this.reasons = new HashMap<Player, String>();
 		this.register = new LogFile(this);
 		this.kicksstorage = new Kicks(this);
 		this.bansstorage = new Bans(this);
 		this.tempbansstorage = new TempBans(this);
+		
+		msg.reloadLanguage();
+		kicksstorage.reloadKicksFile();
+		bansstorage.reloadBansFile();
+		tempbansstorage.reloadtempbansFile();
+		this.listen = new LoginListener(this);
 		
 		log.enabled();
 	}

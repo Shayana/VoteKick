@@ -23,16 +23,17 @@ public class Configuration {
 	{
 		if (config.getBoolean("Percentage"))
 		{	
-			 int total = config.getInt("VotesNeeded."+ vote.getVote());
+			 int total = config.getInt("VotesNeeded."+ vote.getVote().toLowerCase());
 			 int canvote = 0;
 			 for (Player p : Bukkit.getOnlinePlayers())
 			 {
-				 if (p.hasPermission("votekick."+ vote.getVote().toLowerCase()));
+				 if (p.hasPermission("votekick."+ vote.getVote().toLowerCase()))
 					 {
 					 canvote ++;
 					 }
 			 }
-			 return ((canvote / 100) * total);
+			 vote.getVoter().sendMessage(String.valueOf(canvote));
+			 return ((total * canvote) / 100);
 			}
 		else
 		{
@@ -40,12 +41,33 @@ public class Configuration {
 		}
 	}
 	
-	
+	public boolean votelimit()
+	{
+		if(config.getBoolean("VoteLimits"))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 	public int maxVotes(Vote vote)
 	{
-		return config.getInt("MaxVotes."+vote.getVote());
+		return config.getInt("MaxVotes");
 	}
 	
+	public boolean useMaxTime()
+	{
+		if(config.getBoolean("UseMaxTime"))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 	public int maxTime()
 	{
 		return config.getInt("MaxTimeTempBan");
@@ -55,9 +77,9 @@ public class Configuration {
 	{
 		return config.getBoolean("UseTimer");
 	}
-	public int Timer()
+	public int Timer(Vote vote)
 	{
-		return config.getInt("VoteDelay");
+		return config.getInt("Delay."+vote.getVote()) * 20;
 	}
 
 }
