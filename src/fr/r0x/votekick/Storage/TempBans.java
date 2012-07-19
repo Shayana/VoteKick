@@ -1,4 +1,4 @@
-package fr.r0x.VoteKick.Storage;
+package fr.r0x.votekick.Storage;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,8 +9,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
-import fr.r0x.VoteKick.Main.Main;
-import fr.r0x.VoteKick.Vote.TempBan;
+import fr.r0x.votekick.Main.Main;
+import fr.r0x.votekick.Vote.TempBan;
+import fr.r0x.votekick.Vote.UnBan;
 
 public class TempBans {
 
@@ -75,6 +76,7 @@ public class TempBans {
 		long timer = (CurrentTime() + (vote.getTime() * 60000));
 		gettempbans().createSection(path);
 		gettempbans().set(path + ".Date", plugin.register.date());
+		gettempbans().set(path + ".Time", vote.getTime());
 		gettempbans().set(path + ".Until", timer);
 		gettempbans().set(path + ".Reason", vote.getReason());
 		gettempbans().set(path + ".Voters", vote.getList());
@@ -88,12 +90,12 @@ public class TempBans {
 	}
 	
 	
-	public boolean isBanned(Player p)
+	public boolean isBanned(String p)
 	{
-		String path = p.getName();
-		if (gettempbans().contains(p.getName()))
+		String path = p;
+		if (gettempbans().contains(path))
 		{
-			if (CurrentTime() >= gettempbans().getLong(path + ".Until"))
+			if (CurrentTime() <= gettempbans().getLong(path + ".Until"))
 			{
 				return true;
 			}
@@ -105,6 +107,22 @@ public class TempBans {
 		else
 		{
 			return false;
+		}
+	}
+	
+	public void unBan(UnBan vote)
+	{
+		gettempbans().set(vote.getPlayer(), null);
+		
+		try 
+		{
+			tempbans.save(tempbansFile);
+		}
+		catch(IOException e)
+		{
+			System.out.println("Error during bans saving, disabling VoteKick");
+			e.printStackTrace();
+			plugin.getPluginLoader().disablePlugin(plugin);
 		}
 	}
 	

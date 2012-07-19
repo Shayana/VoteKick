@@ -2,18 +2,22 @@ VoteStart:
     Ban: "A vote has started to ban %player. Please type /voteban or /votestay %player"
     Kick: "A vote has started to kick %player. Please type /votekick or /votestay %player"
     TempBan: "A vote has started to tempban %player for %time minutes. Please type /votetempban %player or /votestay %player"
-    
+
 Infos:
     RemainingVotes: "Remaining votes before %player is punished :"
     Kicked: "%player has been kicked from the server."
     Banned: "%player has been banned from the server."
     TempBanned: "%player has been banned from the server for %time minutes."
+    UnBanned: "%player has been unbanned from the server."
     VoteCancelled: "The vote against %player has been cancelled."
     TimeOut: "The vote againts %player has timed out."
+    Muted: "You won't receive VoteKick messages until you send /votemute again"
+    UnMuted: "You will now receive VoteKick messages"
     
 Notify:
     Voted: "%voter has voted against %player"
     Supported: "%voter has supported %player"
+    UnBanned: "%voter has voted to unban %player"
     Cancelled: "%voter has cancelled the vote agains %player"
     Forced: "%voter has forced the vote agains %player"
     
@@ -25,8 +29,10 @@ Errors:
     PlayerNotFound: "%player was not found on this server."
     TooManyVotes: "You have reached the vote limit for today !"
     VoteforYourself: "You can't vote for yourself !"
+    CantStart: "You don't have permission to start a vote."
+    NotBanned: "%player is not banned from this server."
     
 KickScreen:
     Banned: "Players have voted to ban you from this server."
-    TempBanned: "Players have voted to ban you from this server for %duration%"
+    TempBanned: "Players have voted to ban you from this server for %time%"
     Kicked: "Players have voted to kick you from this server, please respect the rules"

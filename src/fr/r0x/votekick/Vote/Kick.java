@@ -1,10 +1,10 @@
-package fr.r0x.VoteKick.Vote;
+package fr.r0x.votekick.Vote;
 
 
-import org.bukkit.Bukkit;
+
 import org.bukkit.entity.Player;
 
-import fr.r0x.VoteKick.Main.Main;
+import fr.r0x.votekick.Main.Main;
 
 public class Kick extends Vote{
 
@@ -24,10 +24,16 @@ public class Kick extends Vote{
 			return;
 		}
 		vote();
-		if(can && remaining == 0)
+		if(remaining == 0)
 		{
-			voted.kickPlayer(plugin.msg.kickedscr());
-			Bukkit.broadcastMessage(plugin.msg.kickedbrd(voted));
+			voted.kickPlayer(plugin.msg.kickedscr(this));
+			for (Player p : plugin.getServer().getOnlinePlayers())
+			{
+				if(!plugin.muted.contains(p))
+				{
+					p.sendMessage(plugin.msg.kickedbrd(this));
+				}
+			}
 			plugin.kicksstorage.Kick(this);
 			accomplish();
 		}

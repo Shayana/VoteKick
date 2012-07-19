@@ -1,4 +1,4 @@
-package fr.r0x.VoteKick.Main;
+package fr.r0x.votekick.Main;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,15 +21,15 @@ public class LoginListener implements Listener {
 	public void onPlayerJoin(PlayerLoginEvent event)
 	{
 	Player p = event.getPlayer();
-	if(plugin.bansstorage.isBanned(p))
+	if(plugin.bansstorage.isBanned(p.getName()))
 	{
-		event.setKickMessage(plugin.msg.bannedscr());
+		event.setKickMessage(plugin.msg.bannedscr(null));
 		event.setResult(Result.KICK_BANNED);
 		return;
 	}
-	else if(plugin.tempbansstorage.isBanned(p))
+	else if(plugin.tempbansstorage.isBanned(p.getName()))
 	{
-		event.setKickMessage("You are temporary banned from this serveur");
+		event.setKickMessage("You are temporary banned from this server");
 		event.setResult(Result.KICK_BANNED);
 		return;
 	}

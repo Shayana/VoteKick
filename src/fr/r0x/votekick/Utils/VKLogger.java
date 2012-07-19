@@ -1,11 +1,11 @@
-package fr.r0x.VoteKick.Utils;
+package fr.r0x.votekick.Utils;
 
 import java.util.logging.Logger;
 
 import org.bukkit.plugin.PluginDescriptionFile;
 
 
-import fr.r0x.VoteKick.Main.Main;
+import fr.r0x.votekick.Main.Main;
 
 public class VKLogger
 {

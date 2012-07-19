@@ -1,4 +1,4 @@
-package fr.r0x.VoteKick.Vote;
+package fr.r0x.votekick.Vote;
 
 
 import java.util.ArrayList;
@@ -8,24 +8,25 @@ import java.util.Map.Entry;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import fr.r0x.VoteKick.Main.Main;
+import fr.r0x.votekick.Main.Main;
 
 public class Vote {
 
 	protected Main plugin;
 	protected Player voter;
 	protected Player voted;
+	protected String player;
 	
 	protected String type;
 	protected String reason;
 	protected int time;
 	protected int remaining;
 	
-	public HashMap<Player, Integer> map;
-	public HashMap<Player, ArrayList<Player>> voters;
-	
-	protected boolean can = true;
-	
+	protected HashMap<Player, Integer> map;
+	protected HashMap<Player, ArrayList<Player>> voters;
+	protected HashMap<String, Integer> unmap;
+	protected HashMap<String, ArrayList<Player>> unvoters;
+		
 	public Vote(Main plugin, Player voter, Player voted, String vote)
 	{
 		this.plugin = plugin;
@@ -33,6 +34,16 @@ public class Vote {
 		this.voter = voter;
 		this.type = vote;
 		this.voters = plugin.votes;
+	}
+	
+	public Vote(Main plugin, Player voter, String voted, String vote)
+	{
+		this.plugin = plugin;
+		this.voter = voter;
+		this.player = voted;
+		this.type = vote;
+		this.unmap = plugin.unbans;
+		this.unvoters = plugin.unvotes;
 	}
 	
 	public void setReason(String reason)
@@ -45,7 +56,7 @@ public class Vote {
 	{
 		this.map = map;
 	}
-	
+		
 	public void setList(HashMap<Player, ArrayList<Player>> list)
 	{
 		this.voters = list;
@@ -54,6 +65,12 @@ public class Vote {
 	public HashMap<Player, Integer> getMap()
 	{
 		return map;
+	}
+	
+	
+	public String getPlayer()
+	{
+		return player;
 	}
 	
 	public String getVote()
@@ -82,6 +99,11 @@ public class Vote {
 		return time;
 	}
 	
+	public int getRemaining()
+	{
+		return remaining;
+	}
+	
 	
 	public ArrayList<String> getList()
 	{
@@ -108,46 +130,47 @@ public class Vote {
 		if (voter == voted)
 		{
 			voter.sendMessage(plugin.msg.forYourself());
-			can = false;
 			return false;
 		}
-		if (!voter.hasPermission("votekick."+ getVote().toLowerCase()) && !voter.hasPermission("votekick.admin"))
+			
+		if (!voter.hasPermission("votekick."+ getVote().toLowerCase()) && !voter.hasPermission("votekick.vote") && !voter.hasPermission("votekick.admin"))
 		{
 			voter.sendMessage(plugin.msg.noPerm());
-			can = false;
 		return false;
 		}
+		
 		if(voted.hasPermission("votekick.protected"))
 		{
 			voter.sendMessage(plugin.msg.Protected(voted));
-			can = false;
 		return false;
 		}
-		if (plugin.config.votelimit() && plugin.register.getCount(voter, this) >= plugin.config.maxVotes(this))
+		
+		if(!map.containsKey(voted) && !voter.hasPermission("votekick.start"))
+		{
+			voter.sendMessage(plugin.msg.cantStart());
+			return false;
+		}
+		
+		if (plugin.config.votelimit() && (plugin.register.getCount(voter, this) >= plugin.config.maxVotes(this)))
 		{
 		voter.sendMessage(plugin.msg.maxVotes());
-		can = false;
 		return false;
 		}
+		
 		if (voters.containsKey(voted) && voters.get(voted).contains(voter))
 		{
 			voter.sendMessage(plugin.msg.allreadyVoted(voted));
-			can = false;
 		return false;
 		}
-		else
-		{
-			can = true;
+		
+		
 		return true;
-		}
 	}
 	
 	
 	
 	public void vote()
 	{
-		
-				
 //Let's report this vote !
 		if(voters.containsKey(voted))
 		{
@@ -163,7 +186,6 @@ public class Vote {
 			voters.put(voted, list);
 		}
 		plugin.register.addCount(voter, this);
-		
 		for(Player p : Bukkit.getOnlinePlayers())
 		{
 			if (p.hasPermission("votekick.notify")){
@@ -184,17 +206,14 @@ public class Vote {
 		else
 		{
 			map.put(voted, 1);
-			if (getVote().equals("Kick"))
+			for (Player p : Bukkit.getOnlinePlayers())
 			{
-				Bukkit.broadcastMessage(plugin.msg.VoteStartKick(voted));
-			}
-			else if (getVote().equals("Ban"))
-			{
-				Bukkit.broadcastMessage(plugin.msg.VoteStartBan(voted));
-			}
-			else if (getVote().equals("TempBan"))
-			{
-				Bukkit.broadcastMessage(plugin.msg.VoteStartTempBan(voter, getTime()));
+				if(!plugin.muted.contains(p))
+				{
+					if (getVote().equals("Kick")) p.sendMessage(plugin.msg.VoteStartKick(this));
+					else if (getVote().equals("Ban")) p.sendMessage(plugin.msg.VoteStartBan(this));
+					else if (getVote().equals("TempBan")) p.sendMessage(plugin.msg.VoteStartTempBan(this));
+				}		
 			}
 			if (plugin.config.doTimer())
 			{
@@ -202,10 +221,6 @@ public class Vote {
 			}
 		}
 		remaining = plugin.config.votesNeeded(this) - map.get(voted);
-		if(remaining > 0)
-		{
-		Bukkit.broadcastMessage(String.valueOf(remaining));
-		}
 	
 	}
 	
@@ -229,7 +244,14 @@ public class Vote {
 				   {
 				return;
 				   }
-				   Bukkit.broadcastMessage(plugin.msg.Timeout(voted));
+				   for(Player p : plugin.getServer().getOnlinePlayers())
+				   {
+					   if(!plugin.muted.contains(p))
+					   {
+						   p.sendMessage(plugin.msg.Timeout(voted));
+					   }
+				   }
+				   
 			       accomplish();   
 				  
 				   

@@ -1,4 +1,4 @@
-package fr.r0x.VoteKick.Storage;
+package fr.r0x.votekick.Storage;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,8 +8,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
-import fr.r0x.VoteKick.Main.Main;
-import fr.r0x.VoteKick.Vote.Vote;
+import fr.r0x.votekick.Main.Main;
+import fr.r0x.votekick.Vote.UnBan;
+import fr.r0x.votekick.Vote.Vote;
 
 public class Bans {
 
@@ -82,9 +83,9 @@ public class Bans {
 	}
 	
 	
-	public boolean isBanned(Player p)
+	public boolean isBanned(String p)
 	{
-		if (getBans().contains(p.getName()))
+		if (getBans().contains(p))
 		{
 			return true;
 		}
@@ -100,6 +101,23 @@ public class Bans {
 	{
 		String path = p.getName();
 		return getBans().getString(path+".Reason");
+	}
+
+
+	public void unBan(UnBan vote)
+	{
+		getBans().set(vote.getPlayer(), null);
+		
+		try 
+		{
+			bans.save(bansFile);
+		}
+		catch(IOException e)
+		{
+			System.out.println("Error during bans saving, disabling VoteKick");
+			e.printStackTrace();
+			plugin.getPluginLoader().disablePlugin(plugin);
+		}
 	}
 	
 	

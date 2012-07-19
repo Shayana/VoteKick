@@ -1,11 +1,11 @@
-package fr.r0x.VoteKick.Vote;
+package fr.r0x.votekick.Vote;
 
 import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import fr.r0x.VoteKick.Main.Main;
+import fr.r0x.votekick.Main.Main;
 
 public class Stay extends Vote{
 
@@ -40,15 +40,17 @@ public class Stay extends Vote{
 			ArrayList<Player> list = voters.get(voted);
 			list.add(voter);
 			voters.put(voted, list);
-			Bukkit.broadcastMessage(plugin.msg.remainingVotes(this));
 			for (Player p : Bukkit.getOnlinePlayers())
 			{
-				if(p.hasPermission("votekick.notify"))
+				if (!plugin.muted.contains(p))
 				{
-					p.sendMessage(plugin.msg.hasSupported(voter, voted));
+					p.sendMessage(plugin.msg.remainingVotes(this));
+					if(p.hasPermission("votekick.notify"))
+					{
+						p.sendMessage(plugin.msg.hasSupported(voter, voted));
+					}
 				}
 			}
-			
 		}
 	}
 

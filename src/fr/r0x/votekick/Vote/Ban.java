@@ -1,10 +1,9 @@
-package fr.r0x.VoteKick.Vote;
+package fr.r0x.votekick.Vote;
 
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import fr.r0x.VoteKick.Main.Main;
+import fr.r0x.votekick.Main.Main;
 
 public class Ban extends Vote{
 
@@ -25,8 +24,14 @@ public class Ban extends Vote{
 		vote();
 			if(remaining == 0)
 			{
-				voted.kickPlayer(plugin.msg.bannedscr());
-				Bukkit.broadcastMessage(plugin.msg.bannedscr());
+				voted.kickPlayer(plugin.msg.bannedscr(this));
+				for (Player p : plugin.getServer().getOnlinePlayers())
+					{
+						if(!plugin.muted.contains(p))
+						{
+							p.sendMessage(plugin.msg.bannedbrd(this));
+						}
+					}
 				plugin.bansstorage.Ban(this);
 				accomplish();
 			}

@@ -1,7 +1,7 @@
 name: VoteKick
 prefix: VK
 authors: [Shayana]
-main: fr.r0x.VoteKick.Main.Main
+main: fr.r0x.votekick.Main.Main
 version: 2.0
 commands:
     votekick:
@@ -13,6 +13,9 @@ commands:
     votetempban:
         description: Vote to tempban a player
         usage: /votetempban <player> <time> (reason)
+    voteunban:
+        description: Vote to unban a player
+        usage: /voteunban <player>
     votestay:
         description: Vote to keep a player on the server
         usage: /votestay <player>
@@ -22,5 +25,8 @@ commands:
     votecancel:
         description: Cancel a vote
         usage: /votecancel <player>
+    votemute:
+      description: (Un)Mute the plugin
+      usage: /votemute
 
 

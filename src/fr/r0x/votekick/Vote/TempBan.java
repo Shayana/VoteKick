@@ -1,12 +1,11 @@
-package fr.r0x.VoteKick.Vote;
+package fr.r0x.votekick.Vote;
 
 
 import java.util.Calendar;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import fr.r0x.VoteKick.Main.Main;
+import fr.r0x.votekick.Main.Main;
 
 public class TempBan extends Vote{
 
@@ -30,8 +29,8 @@ public class TempBan extends Vote{
 		{
 			time = t;
 		}
-		int i = Calendar.getInstance().get(Calendar.MINUTE);
-		this.time = i + time;
+		
+		this.time = time;
 	}
 	
 	public int getTime()
@@ -47,11 +46,18 @@ public class TempBan extends Vote{
 		return;
 		}
 		vote();
-		if(remaining == 0)
+		if(this.remaining == 0)
 		{
 			voted.kickPlayer(plugin.msg.tempbanscr(this));
 			plugin.tempbansstorage.Tempban(this);
-			Bukkit.broadcastMessage(plugin.msg.tempbanbrd(this));
+			for(Player p : plugin.getServer().getOnlinePlayers())
+			{
+				if(!plugin.muted.contains(p))
+				{
+					p.sendMessage(plugin.msg.tempbanbrd(this));
+				}
+			}
+			
 			accomplish();
 		}
 	}

@@ -1,4 +1,4 @@
-package fr.r0x.VoteKick.Storage;
+package fr.r0x.votekick.Storage;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,8 +9,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
-import fr.r0x.VoteKick.Main.Main;
-import fr.r0x.VoteKick.Vote.Vote;
+import fr.r0x.votekick.Main.Main;
+import fr.r0x.votekick.Vote.Vote;
 
 
 public class LogFile 
